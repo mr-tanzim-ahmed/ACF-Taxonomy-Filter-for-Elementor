@@ -131,4 +131,4 @@ No. Because the plugin uses CSS toggling rather than making expensive AJAX datab
 **Tanzim Ahmed**
 
 GitHub:
-https://github.com/mr-tanzim-ahmed/acf-taxonomy-filter-elementor
+[https://github.com/mr-tanzim-ahmed/ACF-Taxonomy-Filter-for-Elementor](https://github.com/mr-tanzim-ahmed/ACF-Taxonomy-Filter-for-Elementor)
