@@ -1,6 +1,6 @@
 === ACF Taxonomy Filter for Elementor ===
 Contributors: mr-tanzim-ahmed
-Donate link: https://github.com/mr-tanzim-ahmed/acf-taxonomy-filter-elementor
+Donate link: https://github.com/mr-tanzim-ahmed/ACF-Taxonomy-Filter-for-Elementor
 Tags: elementor, taxonomy, filter, acf, loop-grid, elementor-addon, post-filter, category-filter
 Requires at least: 6.0
 Tested up to: 6.6

@@ -23,9 +23,9 @@ class Taxonomy_Filter_Widget extends Widget_Base {
 
     protected function register_controls() {
         // CONTENT TAB
-        $this->register_content_query_section();
-        $this->register_content_filter_section();
         $this->register_content_loop_section();
+        $this->register_content_filter_section();
+        $this->register_content_query_section();
         $this->register_content_display_section();
         $this->register_content_labels_section();
 
@@ -138,13 +138,23 @@ class Taxonomy_Filter_Widget extends Widget_Base {
             'condition' => [ 'show_all_button' => 'yes' ],
         ] );
 
+        $this->add_control( 'filter_icon', [
+            'label'       => esc_html__( 'Filter Icon', 'acf-taxonomy-filter-elementor' ),
+            'type'        => Controls_Manager::ICONS,
+            'description' => esc_html__( 'Optional icon to display next to the term name.', 'acf-taxonomy-filter-elementor' ),
+            'condition'   => [ 'filter_type' => [ 'button', 'checkbox', 'radio' ] ],
+        ] );
+
         $this->add_control( 'filter_animation', [
             'label'   => esc_html__( 'Animation', 'acf-taxonomy-filter-elementor' ),
             'type'    => Controls_Manager::SELECT,
             'options' => [
-                'none'    => esc_html__( 'None', 'acf-taxonomy-filter-elementor' ),
-                'fade'    => esc_html__( 'Fade', 'acf-taxonomy-filter-elementor' ),
-                'slide'   => esc_html__( 'Slide Up', 'acf-taxonomy-filter-elementor' ),
+                'none'       => esc_html__( 'None', 'acf-taxonomy-filter-elementor' ),
+                'fade'       => esc_html__( 'Fade', 'acf-taxonomy-filter-elementor' ),
+                'slide'      => esc_html__( 'Slide Up', 'acf-taxonomy-filter-elementor' ),
+                'slide-down' => esc_html__( 'Slide Down', 'acf-taxonomy-filter-elementor' ),
+                'zoom-in'    => esc_html__( 'Zoom In', 'acf-taxonomy-filter-elementor' ),
+                'zoom-out'   => esc_html__( 'Zoom Out', 'acf-taxonomy-filter-elementor' ),
             ],
             'default' => 'fade',
         ] );
@@ -846,6 +856,20 @@ class Taxonomy_Filter_Widget extends Widget_Base {
         $show_hierarchy = 'yes' === ( $settings['show_hierarchy'] ?? 'no' );
         $target_id      = $settings['target_id'] ?? '';
 
+        if ( \Elementor\Plugin::$instance->editor->is_edit_mode() && empty( $target_id ) ) {
+            echo '<div class="elementor-alert elementor-alert-warning">' . esc_html__( 'Please enter a Target CSS ID in the Loop Action settings to link this filter to your Loop Grid.', 'acf-taxonomy-filter-elementor' ) . '</div>';
+        }
+
+        $icon_html = '';
+        if ( ! empty( $settings['filter_icon']['value'] ) ) {
+            ob_start();
+            \Elementor\Icons_Manager::render_icon( $settings['filter_icon'], [ 'aria-hidden' => 'true' ] );
+            $icon_html = ob_get_clean();
+            if ( $icon_html ) {
+                $icon_html = '<span class="acf-tax-filter__item-icon">' . $icon_html . '</span>';
+            }
+        }
+
         // Open main wrapper
         ?>
         <div class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>"
@@ -888,7 +912,7 @@ class Taxonomy_Filter_Widget extends Widget_Base {
                                     role="tab"
                                     aria-selected="true"
                                     aria-pressed="true">
-                                <span class="acf-tax-filter__item-name"><?php echo esc_html( $all_label ); ?></span>
+                                <span class="acf-tax-filter__item-name"><?php echo $icon_html . esc_html( $all_label ); ?></span>
                             </button>
                         <?php elseif ( 'radio' === $filter_type ) : ?>
                             <label class="acf-tax-filter__item acf-tax-filter__item--all">
@@ -897,7 +921,7 @@ class Taxonomy_Filter_Widget extends Widget_Base {
                                        value=""
                                        data-term-slug=""
                                        checked>
-                                <span class="acf-tax-filter__item-name"><?php echo esc_html( $all_label ); ?></span>
+                                <span class="acf-tax-filter__item-name"><?php echo $icon_html . esc_html( $all_label ); ?></span>
                             </label>
                         <?php endif;
                     endif;
@@ -916,7 +940,7 @@ class Taxonomy_Filter_Widget extends Widget_Base {
                                         role="tab"
                                         aria-selected="false"
                                         aria-pressed="false">
-                                    <span class="acf-tax-filter__item-name"><?php echo esc_html( $term->name ); ?></span>
+                                    <span class="acf-tax-filter__item-name"><?php echo $icon_html . esc_html( $term->name ); ?></span>
                                     <?php echo $count_html; ?>
                                 </button>
                                 <?php break;
@@ -926,7 +950,7 @@ class Taxonomy_Filter_Widget extends Widget_Base {
                                            value="<?php echo esc_attr( $term->slug ); ?>"
                                            data-term-slug="<?php echo esc_attr( $term->slug ); ?>"
                                            data-term-id="<?php echo esc_attr( $term->term_id ); ?>">
-                                    <span class="acf-tax-filter__item-name"><?php echo esc_html( $term->name ); ?></span>
+                                    <span class="acf-tax-filter__item-name"><?php echo $icon_html . esc_html( $term->name ); ?></span>
                                     <?php echo $count_html; ?>
                                 </label>
                                 <?php break;
@@ -937,7 +961,7 @@ class Taxonomy_Filter_Widget extends Widget_Base {
                                            value="<?php echo esc_attr( $term->slug ); ?>"
                                            data-term-slug="<?php echo esc_attr( $term->slug ); ?>"
                                            data-term-id="<?php echo esc_attr( $term->term_id ); ?>">
-                                    <span class="acf-tax-filter__item-name"><?php echo esc_html( $term->name ); ?></span>
+                                    <span class="acf-tax-filter__item-name"><?php echo $icon_html . esc_html( $term->name ); ?></span>
                                     <?php echo $count_html; ?>
                                 </label>
                                 <?php break;
@@ -961,7 +985,7 @@ class Taxonomy_Filter_Widget extends Widget_Base {
             <?php endif; ?>
 
         </div> <!-- Close main wrapper -->
-        <?php
+    <?php
     }
 
     protected function content_template() {
@@ -975,64 +999,87 @@ class Taxonomy_Filter_Widget extends Widget_Base {
         var allLabel   = settings.all_button_label || 'All';
         var showTitle  = settings.show_taxonomy_title === 'yes';
         var titleText  = settings.taxonomy_title_text || '';
-        var showReset  = settings.show_reset_button === 'yes';
-        var showCount  = settings.show_result_count === 'yes';
+        
+        var iconHTML = '';
+        if ( settings.filter_icon && settings.filter_icon.value ) {
+            var iconClass = settings.filter_icon.value;
+            iconHTML = '<span class="acf-tax-filter__item-icon"><i class="' + iconClass + '" aria-hidden="true"></i></span>';
+        }
+        
+        if ( ! settings.target_id ) {
+            print( '<div class="elementor-alert elementor-alert-warning">Please enter a Target CSS ID in the Loop Action settings to link this filter to your Loop Grid.</div>' );
+        }
         #>
-        <div class="{{ wrapperCls }}" data-acf-tfe-widget="editor-preview">
+        <div class="{{ wrapperCls }}"
+             data-filter-type="{{ filterType }}"
+             data-animation="{{ settings.filter_animation || 'fade' }}"
+             role="tablist">
+
             <# if ( showTitle && titleText ) { #>
-                <h4 class="acf-tax-filter__title">{{{ titleText }}}</h4>
+                <h4 class="acf-tax-filter__title">{{ titleText }}</h4>
             <# } #>
 
             <div class="acf-tax-filter__items">
-                <# if ( filterType === 'dropdown' || filterType === 'multiselect' ) { #>
-                    <select class="acf-tax-filter__select" <# if ( filterType === 'multiselect' ) { #>multiple<# } #>>
+                <# if ( filterType === 'dropdown' || filterType === 'multiselect' ) {
+                    var isMulti = filterType === 'multiselect' ? 'multiple' : '';
+                #>
+                    <select class="acf-tax-filter__select" {{ isMulti }}>
                         <# if ( showAll && filterType !== 'multiselect' ) { #>
-                            <option value="">{{{ allLabel }}}</option>
+                            <option value="">{{ allLabel }}</option>
                         <# } #>
-                        <option>Sample Category 1</option>
-                        <option>Sample Category 2</option>
-                        <option>Sample Category 3</option>
+                        <option value="term-1">Term 1</option>
+                        <option value="term-2">Term 2</option>
+                        <option value="term-3">Term 3</option>
                     </select>
-                <# } else { #>
-                    <# if ( showAll && ( filterType === 'button' || filterType === 'radio' ) ) { #>
-                        <# if ( filterType === 'button' ) { #>
-                            <button type="button" class="acf-tax-filter__item acf-tax-filter__item--active" aria-pressed="true">
-                                <span class="acf-tax-filter__item-name">{{{ allLabel }}}</span>
+                <# } else {
+                    if ( showAll ) {
+                        if ( filterType === 'button' ) { #>
+                            <button type="button" class="acf-tax-filter__item acf-tax-filter__item--all acf-tax-filter__item--active" role="tab" aria-selected="true" aria-pressed="true">
+                                <span class="acf-tax-filter__item-name">{{{ iconHTML }}}{{ allLabel }}</span>
                             </button>
-                        <# } else { #>
-                            <label class="acf-tax-filter__item">
-                                <input type="radio" checked>
-                                <span class="acf-tax-filter__item-name">{{{ allLabel }}}</span>
-                            </label>
-                        <# } #>
-                    <# } #>
-
-                    <# _.each( ['Category 1', 'Category 2', 'Category 3'], function( name ) { #>
-                        <# if ( filterType === 'button' ) { #>
-                            <button type="button" class="acf-tax-filter__item" aria-pressed="false">
-                                <span class="acf-tax-filter__item-name">{{{ name }}}</span>
-                            </button>
-                        <# } else if ( filterType === 'checkbox' ) { #>
-                            <label class="acf-tax-filter__item">
-                                <input type="checkbox">
-                                <span class="acf-tax-filter__item-name">{{{ name }}}</span>
-                            </label>
                         <# } else if ( filterType === 'radio' ) { #>
-                            <label class="acf-tax-filter__item">
-                                <input type="radio">
-                                <span class="acf-tax-filter__item-name">{{{ name }}}</span>
+                            <label class="acf-tax-filter__item acf-tax-filter__item--all">
+                                <input type="radio" checked>
+                                <span class="acf-tax-filter__item-name">{{{ iconHTML }}}{{ allLabel }}</span>
                             </label>
-                        <# } #>
-                    <# }); #>
-                <# } #>
-            </div>
+                        <# }
+                    }
+                    #>
+                    <# if ( filterType === 'button' ) { #>
+                        <button type="button" class="acf-tax-filter__item" role="tab" aria-selected="false" aria-pressed="false">
+                            <span class="acf-tax-filter__item-name">{{{ iconHTML }}}Sample Term 1</span>
+                        </button>
+                        <button type="button" class="acf-tax-filter__item" role="tab" aria-selected="false" aria-pressed="false">
+                            <span class="acf-tax-filter__item-name">{{{ iconHTML }}}Sample Term 2</span>
+                        </button>
+                    <# } else if ( filterType === 'checkbox' ) { #>
+                        <label class="acf-tax-filter__item">
+                            <input type="checkbox">
+                            <span class="acf-tax-filter__item-name">{{{ iconHTML }}}Sample Term 1</span>
+                        </label>
+                        <label class="acf-tax-filter__item">
+                            <input type="checkbox">
+                            <span class="acf-tax-filter__item-name">{{{ iconHTML }}}Sample Term 2</span>
+                        </label>
+                    <# } else if ( filterType === 'radio' ) { #>
+                        <label class="acf-tax-filter__item">
+                            <input type="radio">
+                            <span class="acf-tax-filter__item-name">{{{ iconHTML }}}Sample Term 1</span>
+                        </label>
+                        <label class="acf-tax-filter__item">
+                            <input type="radio">
+                            <span class="acf-tax-filter__item-name">{{{ iconHTML }}}Sample Term 2</span>
+                        </label>
+                    <# }
+                } #>
+            </div>      
 
-            <# if ( showCount || showReset ) { #>
+            <# if ( settings.show_result_count === 'yes' || settings.show_reset_button === 'yes' ) { #>
             <div class="acf-tax-filter__actions">
-                <# if ( showCount ) { #>
+                <# if ( settings.show_result_count === 'yes' ) { #>
                     <span class="acf-tax-filter__result-count">{{{ (settings.result_count_text || '{count} results').replace('{count}', '—') }}}</span>
                 <# } #>
-                <# if ( showReset ) { #>
+                <# if ( settings.show_reset_button === 'yes' ) { #>
                     <button type="button" class="acf-tax-filter__reset">{{{ settings.reset_button_label || 'Reset' }}}</button>
                 <# } #>
             </div>
