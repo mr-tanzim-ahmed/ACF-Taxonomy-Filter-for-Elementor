@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ACF Taxonomy Filter for Elementor
  * Description: A powerful Elementor widget for filtering Loop Grid posts by taxonomy terms with smooth animations. Works with Elementor Pro Loop Grid.
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author: Tanzim
  * Author URI: https://developer.developer.developer
  * Text Domain: acf-taxonomy-filter-elementor
@@ -22,7 +22,7 @@ if ( defined( 'ACF_TFE_VERSION' ) ) {
     return;
 }
 
-define( 'ACF_TFE_VERSION', '1.0.3' );
+define( 'ACF_TFE_VERSION', '1.0.4' );
 define( 'ACF_TFE_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ACF_TFE_URL', plugin_dir_url( __FILE__ ) );
 define( 'ACF_TFE_BASENAME', plugin_basename( __FILE__ ) );

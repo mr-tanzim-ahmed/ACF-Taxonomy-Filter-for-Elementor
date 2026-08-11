@@ -157,13 +157,24 @@ class Taxonomy_Filter_Widget extends Widget_Base {
             'tab'   => Controls_Manager::TAB_CONTENT,
         ] );
 
+        $this->add_control( 'css_mode_heading', [
+            'label'     => esc_html__( 'How to use', 'acf-taxonomy-filter-elementor' ),
+            'type'      => Controls_Manager::RAW_HTML,
+            'raw'       => '<ol style="margin:0;padding-left:18px;color:#555;font-size:12px;line-height:1.6;">'
+                         . '<li>' . esc_html__( 'Add an Elementor Loop Grid widget to your page.', 'acf-taxonomy-filter-elementor' ) . '</li>'
+                         . '<li>' . esc_html__( 'Go to the Loop Grid → Advanced → Layout → CSS ID.', 'acf-taxonomy-filter-elementor' ) . '</li>'
+                         . '<li>' . esc_html__( 'Add a custom, unique CSS ID (e.g., "my-custom-grid").', 'acf-taxonomy-filter-elementor' ) . '</li>'
+                         . '<li>' . esc_html__( 'Enter that same unique CSS ID below to link this filter.', 'acf-taxonomy-filter-elementor' ) . '</li>'
+                         . '</ol>',
+        ] );
+
         $this->add_control( 'target_id', [
-            'label'       => esc_html__( 'Selected Loop Grid', 'acf-taxonomy-filter-elementor' ),
-            'type'        => Controls_Manager::SELECT,
+            'label'       => esc_html__( 'Selected Loop Grid (CSS ID)', 'acf-taxonomy-filter-elementor' ),
+            'type'        => Controls_Manager::TEXT,
             'default'     => '',
-            'options'     => [ '' => esc_html__( '— Select a Loop Grid —', 'acf-taxonomy-filter-elementor' ) ],
+            'placeholder' => 'my-custom-grid',
             'label_block' => true,
-            'description' => esc_html__( 'Select the Loop Grid on this page you want to filter.', 'acf-taxonomy-filter-elementor' ),
+            'description' => esc_html__( 'The CSS ID you assigned to the target Loop Grid. Do not include the "#".', 'acf-taxonomy-filter-elementor' ),
         ] );
 
         $this->end_controls_section();
