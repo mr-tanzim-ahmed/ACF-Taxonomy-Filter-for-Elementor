@@ -64,16 +64,27 @@ class Taxonomy_Filter_Widget extends Widget_Base {
             'default' => 'post',
         ] );
 
-        // Build taxonomy options - gather from ALL post types
+        // Build taxonomy options — use get_taxonomies() directly to catch ALL
+        // registered public taxonomies, including ACF, CPT UI, and custom ones.
         $all_taxonomies = [];
+        $tax_objects = get_taxonomies( [ 'public' => true ], 'objects' );
+        foreach ( $tax_objects as $tax ) {
+            $all_taxonomies[ $tax->name ] = $tax->label . ' (' . $tax->name . ')';
+        }
+
+        // Also grab any taxonomy attached to the selected post types that might
+        // not be marked public (edge case for some ACF configs)
         foreach ( $pt_options as $pt_slug => $pt_label ) {
-            $taxs = get_object_taxonomies( $pt_slug, 'objects' );
-            foreach ( $taxs as $tax ) {
-                if ( $tax->public ) {
-                    $all_taxonomies[ $tax->name ] = $tax->label;
+            $pt_taxs = get_object_taxonomies( $pt_slug, 'objects' );
+            foreach ( $pt_taxs as $tax ) {
+                if ( ! isset( $all_taxonomies[ $tax->name ] ) && $tax->publicly_queryable !== false ) {
+                    $all_taxonomies[ $tax->name ] = $tax->label . ' (' . $tax->name . ')';
                 }
             }
         }
+
+        // Sort alphabetically by label for usability
+        asort( $all_taxonomies );
 
         $this->add_control( 'taxonomy', [
             'label'   => esc_html__( 'Taxonomy', 'acf-taxonomy-filter-elementor' ),
