@@ -1,125 +1,198 @@
 # ACF Taxonomy Filter for Elementor
 
-**Instant taxonomy filtering for Elementor Pro Loop Grids — no AJAX, no page reloads, no database strain.** Filter WordPress posts, WooCommerce products, and custom post types by categories, tags, or ACF custom taxonomies with buttons, checkboxes, radio buttons, dropdowns, or multi-select — all with smooth animations and full Elementor style controls.
+**The fastest taxonomy filter widget for Elementor Pro Loop Grids — instant CSS-based filtering with zero AJAX, zero page reloads, and zero database overhead.** Filter WordPress posts, WooCommerce products, and custom post types by categories, tags, or ACF custom taxonomies using buttons, checkboxes, radio buttons, dropdowns, or multi-select — all with smooth animations and full Elementor visual style controls.
 
-**Version:** 1.0.5 · **Requires:** WordPress 6.0+, PHP 7.4+, Elementor (Loop Grid requires Elementor Pro) · **License:** GPL-2.0-or-later
-
----
-
-## 👋 Meet Your New Favorite Elementor Filter
-
-If you've ever built a beautiful Loop Grid in Elementor Pro and wanted a simple, blazing-fast way to filter those posts by categories, tags, or Advanced Custom Fields (ACF) custom taxonomies — without writing any code or dealing with clunky page reloads — you're in the right place.
-
-This WordPress filtering plugin was built as an answer to heavy, AJAX-bloated filter plugins that break layouts, fire duplicate database queries, and slow down your site. Instead, it filters instantly in the browser using an optimized CSS engine that feels completely native to Elementor Pro.
-
-**What makes this Elementor taxonomy filter different:**
-
-- **Zero AJAX Lag:** A highly optimized CSS toggling engine sorts and animates posts instantly on click. No loading spinners, no database strain, better Core Web Vitals.
-- **Unbreakable Stability:** The core engine is wrapped in robust exception handling. Even if another plugin misbehaves, errors are logged gracefully instead of crashing your live site.
-- **Bulletproof CSS Targeting:** Link your filter to any Elementor Loop Grid instantly using a standard CSS ID. No complicated setup.
-- **Developer-Friendly & Secure:** Strict WordPress coding standards, proper sanitization and escaping, and lightweight vanilla JavaScript with no jQuery dependency.
-
-Whether you're building a WooCommerce store, a real estate portfolio, a directory, or a WordPress blog, this plugin delivers the buttery-smooth filtering experience your visitors expect.
+[![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-blue?logo=wordpress)](https://wordpress.org/)
+[![Elementor](https://img.shields.io/badge/Elementor-Pro-purple?logo=elementor)](https://elementor.com/)
+[![PHP](https://img.shields.io/badge/PHP-7.4%2B-777BB4?logo=php&logoColor=white)](https://www.php.net/)
+[![License](https://img.shields.io/badge/License-GPL--2.0--or--later-green)](LICENSE)
+[![Version](https://img.shields.io/badge/Version-1.0.6-orange)](CHANGELOG.md)
 
 ---
 
-## ✨ Key Features
+## 👋 Why This Plugin Exists
 
-- ⚡ **Instant CSS-Based Filtering** — Smooth, tab-like filtering with zero page refresh, zero database lag, and no URL changes.
-- 🎨 **Native Loop Grid Integration** — Built to work natively with Elementor Pro's Loop Builder via a simple CSS ID link.
-- 🔘 **5 Filter Types** — Buttons, Checkboxes, Radio Buttons, Dropdown, and Multi-Select, with optional icons.
-- 🎬 **6 Animation Options** — Fade, Slide Up, Slide Down, Zoom In, Zoom Out, or none.
-- 🏷️ **ACF & Custom Taxonomy Support** — Works with categories, tags, WooCommerce taxonomies, and any custom taxonomy registered via ACF, CPT UI, or custom code.
-- 🖌️ **100% Visual Styling Controls** — Style buttons, checkboxes, dropdowns, icons, counts, and reset button across normal, hover, and active states — all from the Elementor panel.
-- 📱 **Fully Responsive** — Horizontal, vertical, and grid layouts with per-device alignment, gaps, and spacing.
-- 🔢 **Term Counts & Result Counter** — Optional post count per term, live result count message, and a reset filter button.
-- 🌳 **Hierarchical Terms** — Optional indentation for child categories.
-- ♿ **Accessible Markup** — Keyboard navigability, semantic tags, and ARIA attributes (`aria-selected`, `aria-pressed`, `role="tablist"`).
-- 🚀 **Performance Optimized** — Clean CSS and lightweight vanilla JS. No external library dependencies.
+Hi, I'm Tanzim! I built this plugin because I was frustrated with the heavy, AJAX-bloated filtering plugins available for Elementor. They broke my layouts, fired duplicate database queries on every click, and slowed down my sites.
 
----
+I wanted something that felt **completely native** to Elementor Pro — a widget you just drop in, connect to your Loop Grid with a simple CSS ID, and it **just works**. No configuration headaches, no performance penalties, no broken designs.
 
-## 📋 Setup in Under a Minute
+The result is a filter engine that runs entirely in the browser using an optimized CSS visibility system. Your visitors get instant results with smooth animations, and your server doesn't even know a filter was clicked.
 
-1. Open any page or template in the **Elementor editor**.
-2. **Add your Loop Grid:** Drag an Elementor Pro Loop Grid widget onto your page and set up your template.
-3. **Give your Loop Grid an ID:** In the Loop Grid settings, go to **Advanced → Layout → CSS ID** and enter a unique ID (e.g. `my-custom-grid`).
-4. **Add the Filter:** Search for **ACF Taxonomy Filter** in the Elementor panel and drag it above your Loop Grid.
-5. **Link them together:** In the filter widget's **Loop Action** tab, enter the exact same CSS ID in the **Selected Loop Grid (CSS ID)** field — without the `#`.
-6. **Configure & Style:** Choose your post type, taxonomy, and filter type, then customize everything from the Style tab.
+### What makes this different from other WordPress filter plugins:
+
+- **⚡ Zero AJAX Lag** — Posts filter and animate instantly on click. No loading spinners, no server roundtrips, better Core Web Vitals scores.
+- **🛡️ Unbreakable Stability** — Every critical path is wrapped in `try/catch` exception handling. Even if another plugin throws an error, this one keeps working.
+- **🎯 Simple CSS ID Targeting** — Connect your filter to any Loop Grid with one CSS ID. No complicated query builders or shortcodes.
+- **🔒 Secure & Lightweight** — Built with strict WordPress coding standards, proper sanitization/escaping, and vanilla JavaScript (zero jQuery dependency).
 
 ---
 
-## 🛠️ Widget Settings Guide
+## ✨ Features at a Glance
+
+| Feature | Description |
+|---------|-------------|
+| **5 Filter Types** | Buttons, Checkboxes, Radio Buttons, Dropdown, Multi-Select |
+| **6 Animations** | Fade, Slide Up, Slide Down, Zoom In, Zoom Out, None |
+| **Custom Icons** | Add Font Awesome or SVG icons next to filter labels |
+| **Live Result Count** | Shows "{count} results found" with customizable text |
+| **Reset Button** | One-click filter reset with customizable label |
+| **Term Counts** | Optional post count badge next to each term |
+| **Hierarchical Terms** | Indented child categories for organized display |
+| **3 Layouts** | Horizontal, Vertical, or Grid with responsive alignment |
+| **Full Style Controls** | Normal/Hover/Active states for colors, backgrounds, borders, typography, shadows |
+| **WooCommerce Ready** | Filter products by `product_cat`, `product_tag`, or any custom taxonomy |
+| **ACF Compatible** | Works with any taxonomy registered via ACF, CPT UI, or custom code |
+| **Accessible** | ARIA roles, keyboard navigation, focus-visible outlines |
+| **No Dependencies** | Vanilla JS, no jQuery, no external libraries |
+
+---
+
+## 📋 Setup Guide — Under 60 Seconds
+
+### Step 1: Add a Loop Grid
+Open any page in the **Elementor editor** and drag an **Elementor Pro Loop Grid** widget onto your page. Configure your loop template as usual.
+
+### Step 2: Set a CSS ID on Your Loop Grid
+In the Loop Grid widget settings, navigate to:
+> **Advanced** → **Layout** → **CSS ID**
+
+Enter a unique identifier, for example: `my-product-grid`
+
+### Step 3: Add the Taxonomy Filter Widget
+Search for **"ACF Taxonomy Filter"** in the Elementor widget panel and drag it above your Loop Grid.
+
+### Step 4: Link the Filter to Your Grid
+In the filter widget's **Loop Action** section, enter the exact same CSS ID:
+> `my-product-grid` *(do not include the `#` symbol)*
+
+### Step 5: Configure & Style
+- Choose your **Post Type** and **Taxonomy** in the Query tab
+- Pick your **Filter Type** (Buttons, Checkboxes, etc.)
+- Select an **Animation** (Fade, Slide Up, Zoom In, etc.)
+- Style everything from the **Style tab** — colors, typography, borders, shadows, spacing
+
+**That's it!** Your filter is live and filtering instantly.
+
+---
+
+## 🛠️ Complete Widget Settings Reference
 
 ### Content Tab
-* **Loop Action:** The CSS ID that connects this filter to your Elementor Loop Grid.
-* **Filter Type:** Buttons, Checkboxes, Radio Buttons, Dropdown, or Multi-Select — with custom icons and entry animations.
-* **Query:** Post type, taxonomy, hide empty terms, and term sort order (name/count, ascending/descending).
-* **Display:** Taxonomy title, hierarchy indentation, term post counts, and layout/alignment.
-* **Labels & Actions:** Result count text and reset button label.
+
+| Section | Controls |
+|---------|----------|
+| **Loop Action** | CSS ID to connect filter to your Loop Grid |
+| **Filter Type** | Type selector, "All" button toggle/label, icon picker, animation |
+| **Query** | Post type, taxonomy, hide empty, term sort order |
+| **Display** | Layout direction, alignment, term counts, hierarchy, title |
+| **Labels & Actions** | Result count text template, reset button label |
 
 ### Style Tab
-* **Container:** Background, border, radius, margin, padding, gap, and box shadow.
-* **Title:** Typography, color, spacing, and text shadow.
-* **Buttons:** Normal, Hover, and Active states — colors, backgrounds, borders, typography, shadows, transitions.
-* **Checkbox & Radio:** Input size, label gap, padding, hover background, and borders.
-* **Dropdown & Multi-Select:** Typography, colors, borders, padding, and height.
-* **Actions Bar:** Result count typography/color and reset button styling.
+
+| Section | Controls |
+|---------|----------|
+| **Container** | Background, border, radius, padding, margin, gap, box shadow |
+| **Title** | Typography, color, spacing, text shadow |
+| **Buttons** | Normal/Hover/Active tabs: text color, background, border, box shadow, text shadow, transition, radius, padding, min-width |
+| **Dropdown** | Typography, color, background, border, radius, padding, height, box shadow |
+| **Checkbox/Radio** | Typography, label color, hover color, input size, gap, padding, background, hover background, border, radius |
+| **Term Count** | Typography, color |
+| **Reset Button** | Normal/Hover tabs: typography, color, background, border, radius, padding |
+| **Actions Bar** | Top spacing, result count typography/color |
 
 ---
 
 ## ⚙️ Requirements
 
-| Requirement | Version |
-|------------|---------|
+| Requirement | Minimum Version |
+|-------------|----------------|
 | WordPress | 6.0+ |
 | Tested up to | 6.6 |
 | PHP | 7.4+ |
-| Elementor | Free or Pro |
+| Elementor Free | For placing the widget |
 | Elementor Pro | Required for Loop Grid filtering |
+
+---
+
+## 🌐 Browser Compatibility
+
+Tested and working across all modern browsers:
+
+- ✅ Chrome (Desktop & Mobile)
+- ✅ Firefox
+- ✅ Safari (macOS & iOS)
+- ✅ Edge
+- ✅ Opera / Android Chrome
+
+---
+
+## ♿ Accessibility
+
+Built with WCAG best practices:
+
+- Semantic `role="tablist"` and `role="tab"` markup
+- Dynamic `aria-selected` and `aria-pressed` state updates
+- Full keyboard navigation with `focus-visible` outlines
+- Screen reader friendly labels
 
 ---
 
 ## 💡 Frequently Asked Questions
 
-### Does it work with WooCommerce products?
-Yes! Select the `product` post type and a WooCommerce taxonomy (like `product_cat` or `product_tag`) in the widget's Query settings.
+**Does it work with WooCommerce products?**
+Yes! Select `product` as the post type and choose any WooCommerce taxonomy (`product_cat`, `product_tag`, or custom attributes) in the Query settings.
 
-### Do I need Elementor Pro?
-The filter widget loads with Elementor Free, but filtering Loop Grids requires **Elementor Pro's Loop Builder** feature.
+**Do I need Elementor Pro?**
+The filter widget loads with Elementor Free, but actually filtering a Loop Grid requires **Elementor Pro's Loop Builder**.
 
-### Will this slow down my website or hurt SEO?
-No. Filtering runs entirely in the browser via CSS toggling — no AJAX calls, no extra database queries. All posts remain in the HTML, so search engines can crawl everything.
+**Will this slow down my website or hurt my SEO?**
+No. All filtering happens in the browser via CSS — no server calls, no extra database queries. All post content stays in the HTML source, so search engines can still crawl and index everything.
 
-### Can visitors select multiple terms?
-Yes — use the Checkbox or Multi-Select filter types to combine multiple taxonomy terms.
+**Can visitors select multiple taxonomy terms?**
+Yes — use the **Checkbox** or **Multi-Select** filter types to let users combine multiple terms.
 
-### Does it support custom post types and ACF taxonomies?
-Yes. Any public post type and any public taxonomy, including those registered by ACF, CPT UI, or custom code.
+**Does it work with custom post types and ACF fields?**
+Yes. Any public post type and any public taxonomy works, including those registered by ACF, CPT UI, Toolset, or custom PHP code.
+
+**What happens if I don't enter a CSS ID?**
+The widget shows a clear warning message in the Elementor editor telling you to set up the CSS ID connection. On the frontend, it simply won't filter anything — no errors, no crashes.
 
 ---
 
 ## 📝 Changelog
 
-### 1.0.5
-- Fixed Elementor detection race that could show a false "Elementor missing" notice.
-- Fixed exact term-class matching (e.g. "news" no longer matches "news-updates").
-- Fixed animation race condition when toggling filters rapidly.
-- Fixed multi-select reset clearing all options correctly.
-- Implemented Slide Down, Zoom In, and Zoom Out animations.
-- Fixed duplicate event listeners on widget re-initialization.
-- Filter now initializes in the Elementor editor preview.
-- CSS cleanup and no animation flash on initial page load.
+### 1.0.6 — Bug Fixes & Stability
+- **Fixed:** `querySelector` crash when user accidentally includes `#` or `.` in the CSS ID field
+- **Fixed:** Animation transitions never played due to missing DOM reflow — now smooth on all browsers
+- **Fixed:** CSS specificity too low — Elementor theme styles could override filter button appearance
+- **Fixed:** Hardcoded default colors removed — Elementor Style tab controls are now the sole authority
+- **Fixed:** SVG icons rendered as `[object Object]` in Elementor editor live preview
+- **Fixed:** Radio reset logic was fragile — now uses explicit null/empty check
+- **Fixed:** `animate` parameter was implicitly `undefined` on user clicks — now explicitly defaults to `true`
+- **Cleaned up:** Removed dead CSS from deleted AJAX engine (loading spinner, loop-grid classes)
+- **Cleaned up:** `uninstall.php` no longer references non-existent database options
 
-### 1.0.0
-- Initial release with instant CSS-engine filtering, 5 filter types, and full style controls.
+### 1.0.5 — Stability Release
+- Fixed Elementor detection race condition
+- Fixed exact term-class matching (e.g. "news" no longer matches "news-updates")
+- Fixed animation race condition on rapid toggling
+- Fixed multi-select reset behavior
+- Added Slide Down, Zoom In, and Zoom Out animations
+- Fixed duplicate event listeners on re-initialization
+- Filter now initializes in Elementor editor preview
+
+### 1.0.0 — Initial Release
+- 5 filter types with instant CSS-engine filtering
+- Full Elementor style controls (Normal/Hover/Active)
+- Accessible markup with ARIA roles and keyboard navigation
 
 ---
 
 ## 📄 License
 
-This plugin is free software, released under the **GNU General Public License v2.0 or later**. See [LICENSE](LICENSE) for the full text.
+This plugin is free software released under the [GNU General Public License v2.0 or later](LICENSE).
+
+You are free to use, modify, and distribute this plugin under the terms of the GPL-2.0-or-later license. See the [LICENSE](LICENSE) file for the complete legal text.
 
 ---
 
@@ -127,4 +200,9 @@ This plugin is free software, released under the **GNU General Public License v2
 
 **Tanzim Ahmed**
 
-GitHub: [https://github.com/mr-tanzim-ahmed/ACF-Taxonomy-Filter-for-Elementor](https://github.com/mr-tanzim-ahmed/ACF-Taxonomy-Filter-for-Elementor)
+- GitHub: [@mr-tanzim-ahmed](https://github.com/mr-tanzim-ahmed)
+- Repository: [ACF-Taxonomy-Filter-for-Elementor](https://github.com/mr-tanzim-ahmed/ACF-Taxonomy-Filter-for-Elementor)
+
+---
+
+*If this plugin helped you, consider giving it a ⭐ on GitHub!*
