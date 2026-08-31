@@ -1,25 +1,16 @@
 <?php
 /**
- * Fired when the plugin is uninstalled.
+ * Uninstall handler for ACF Taxonomy Filter for Elementor.
+ *
+ * Cleans up plugin data when the plugin is uninstalled via the WordPress dashboard.
+ *
+ * @package ACF_TFE
  */
 
-// If uninstall not called from WordPress, then exit.
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-	exit;
+    exit;
 }
 
-// Delete plugin-specific transients
-global $wpdb;
-
-$transients = $wpdb->get_results( "
-	SELECT option_name 
-	FROM $wpdb->options 
-	WHERE option_name LIKE '\_transient\_acf_tfe\_%' 
-	OR option_name LIKE '\_transient\_timeout\_acf_tfe\_%'
-" );
-
-if ( ! empty( $transients ) ) {
-	foreach ( $transients as $transient ) {
-		delete_option( $transient->option_name );
-	}
-}
+// This plugin stores no custom options or database tables.
+// If future versions add options, clean them up here.
+// Example: delete_option( 'acf_tfe_settings' );

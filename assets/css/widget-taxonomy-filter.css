@@ -1,6 +1,9 @@
 /**
  * ACF Taxonomy Filter for Elementor
- * Frontend Styles
+ * Frontend Styles — v1.0.6
+ *
+ * All selectors use .acf-tax-filter parent for higher specificity
+ * to prevent Elementor theme overrides.
  */
 
 .acf-tax-filter {
@@ -10,13 +13,13 @@
 }
 
 /* Title */
-.acf-tax-filter__title {
+.acf-tax-filter .acf-tax-filter__title {
     margin: 0 0 15px 0;
     padding: 0;
 }
 
 /* Items Container */
-.acf-tax-filter__items {
+.acf-tax-filter .acf-tax-filter__items {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
@@ -26,31 +29,30 @@
 }
 
 /* Layout Variants */
-.acf-tax-filter--layout-horizontal .acf-tax-filter__items {
+.acf-tax-filter.acf-tax-filter--layout-horizontal .acf-tax-filter__items {
     flex-direction: row;
     align-items: center;
 }
 
-.acf-tax-filter--layout-vertical .acf-tax-filter__items {
+.acf-tax-filter.acf-tax-filter--layout-vertical .acf-tax-filter__items {
     flex-direction: column;
     align-items: stretch;
 }
 
-.acf-tax-filter--layout-grid .acf-tax-filter__items {
+.acf-tax-filter.acf-tax-filter--layout-grid .acf-tax-filter__items {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
 }
 
 /* Alignment */
-.acf-tax-filter--align-left .acf-tax-filter__items { justify-content: flex-start; }
-.acf-tax-filter--align-center .acf-tax-filter__items { justify-content: center; }
-.acf-tax-filter--align-right .acf-tax-filter__items { justify-content: flex-end; }
-/* stretch: "justify-content: stretch" is invalid in flexbox; expand children instead */
-.acf-tax-filter--align-stretch .acf-tax-filter__items > * { flex: 1; }
+.acf-tax-filter.acf-tax-filter--align-left .acf-tax-filter__items { justify-content: flex-start; }
+.acf-tax-filter.acf-tax-filter--align-center .acf-tax-filter__items { justify-content: center; }
+.acf-tax-filter.acf-tax-filter--align-right .acf-tax-filter__items { justify-content: flex-end; }
+.acf-tax-filter.acf-tax-filter--align-stretch .acf-tax-filter__items > * { flex: 1; }
 
-/* Filter Items (Button / Label) */
-.acf-tax-filter__item {
+/* Filter Items (Button / Label) — no hardcoded colors */
+.acf-tax-filter .acf-tax-filter__item {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -68,45 +70,48 @@
     line-height: 1.4;
 }
 
-.acf-tax-filter--button .acf-tax-filter__item {
-    background-color: #f0f0f0;
-    color: #333;
-}
-
-.acf-tax-filter__item:hover {
+.acf-tax-filter .acf-tax-filter__item:hover {
     opacity: 0.85;
 }
 
-.acf-tax-filter__item--active {
-    background-color: #333;
-    color: #fff;
-}
-
-.acf-tax-filter__item--child {
+/* Child item indentation */
+.acf-tax-filter .acf-tax-filter__item--child {
     margin-left: 20px;
 }
 
+/* Icon inside items */
+.acf-tax-filter .acf-tax-filter__item-icon {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 4px;
+}
+.acf-tax-filter .acf-tax-filter__item-icon i,
+.acf-tax-filter .acf-tax-filter__item-icon svg {
+    width: 1em;
+    height: 1em;
+}
+
 /* Checkbox & Radio */
-.acf-tax-filter--checkbox .acf-tax-filter__item,
-.acf-tax-filter--radio .acf-tax-filter__item {
+.acf-tax-filter.acf-tax-filter--checkbox .acf-tax-filter__item,
+.acf-tax-filter.acf-tax-filter--radio .acf-tax-filter__item {
     background: transparent;
     padding: 6px 12px;
 }
 
-.acf-tax-filter__item input[type="checkbox"],
-.acf-tax-filter__item input[type="radio"] {
+.acf-tax-filter .acf-tax-filter__item input[type="checkbox"],
+.acf-tax-filter .acf-tax-filter__item input[type="radio"] {
     margin: 0;
     cursor: pointer;
 }
 
 /* Term Count */
-.acf-tax-filter__item-count {
+.acf-tax-filter .acf-tax-filter__item-count {
     font-size: 0.85em;
     opacity: 0.7;
 }
 
 /* Dropdown */
-.acf-tax-filter__select {
+.acf-tax-filter .acf-tax-filter__select {
     width: 100%;
     padding: 10px 14px;
     border: 1px solid #ccc;
@@ -117,18 +122,18 @@
     color: inherit;
 }
 
-.acf-tax-filter__select:focus {
+.acf-tax-filter .acf-tax-filter__select:focus {
     outline: 2px solid #0073aa;
     outline-offset: 1px;
 }
 
-.acf-tax-filter__select[multiple] {
+.acf-tax-filter .acf-tax-filter__select[multiple] {
     height: auto;
     min-height: 100px;
 }
 
 /* Actions Bar */
-.acf-tax-filter__actions {
+.acf-tax-filter .acf-tax-filter__actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -136,17 +141,17 @@
     gap: 15px;
 }
 
-.acf-tax-filter__actions:empty {
+.acf-tax-filter .acf-tax-filter__actions:empty {
     display: none;
 }
 
-.acf-tax-filter__result-count {
+.acf-tax-filter .acf-tax-filter__result-count {
     font-size: 0.9em;
     color: #666;
 }
 
 /* Reset Button */
-.acf-tax-filter__reset {
+.acf-tax-filter .acf-tax-filter__reset {
     background: none;
     border: none;
     color: #d32f2f;
@@ -158,32 +163,14 @@
     transition: color 0.2s ease;
 }
 
-.acf-tax-filter__reset:hover {
+.acf-tax-filter .acf-tax-filter__reset:hover {
     color: #b71c1c;
 }
 
-/* Focus */
-.acf-tax-filter__item:focus-visible,
-.acf-tax-filter__reset:focus-visible,
-.acf-tax-filter__select:focus-visible {
+/* Focus — keyboard accessibility */
+.acf-tax-filter .acf-tax-filter__item:focus-visible,
+.acf-tax-filter .acf-tax-filter__reset:focus-visible,
+.acf-tax-filter .acf-tax-filter__select:focus-visible {
     outline: 2px solid #0073aa;
     outline-offset: 2px;
 }
-
-/* Loop Grid */
-.acf-tax-filter__loop-grid {
-    display: grid;
-    gap: 20px;
-    margin-top: 20px;
-}
-
-.acf-tax-filter__loop-item {
-    display: block;
-    width: 100%;
-    overflow: hidden;
-}
-/* Loading State */
-.acf-tax-filter-loading { position: relative; }
-.acf-tax-filter-loading::after { content: ''; position: absolute; top: 50%; left: 50%; width: 30px; height: 30px; margin: -15px 0 0 -15px; border: 3px solid rgba(0,0,0,0.1); border-top-color: #0073aa; border-radius: 50%; animation: acf-tax-filter-spin 1s linear infinite; }
-@keyframes acf-tax-filter-spin { to { transform: rotate(360deg); } }
-

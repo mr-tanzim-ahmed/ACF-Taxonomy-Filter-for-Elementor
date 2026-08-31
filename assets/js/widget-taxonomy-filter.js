@@ -1,6 +1,6 @@
 /**
  * ACF Taxonomy Filter for Elementor - Frontend JS
- * Version 1.0.5
+ * Version 1.0.6
  *
  * CSS Engine - Instant filtering of a targeted Elementor Loop Grid widget.
  *
@@ -23,7 +23,10 @@
         this.postType   = el.getAttribute('data-post-type') || 'post';
         this.filterType = el.getAttribute('data-filter-type') || 'button';
         this.animation  = el.getAttribute('data-animation') || 'fade';
-        this.targetId   = el.getAttribute('data-target-id') || '';
+
+        // Sanitize target ID: strip leading # or . that users may accidentally include
+        var rawId = el.getAttribute('data-target-id') || '';
+        this.targetId = rawId.replace(/^[#.]+/, '');
 
         this.activeTerms = [];
         this.resetBtn    = el.querySelector('.acf-tax-filter__reset');
@@ -62,26 +65,26 @@
                     }
                 }
                 self._updateButtonUI();
-                self._filter();
+                self._filter(true);
             });
         } else if (this.filterType === 'checkbox') {
             this.el.addEventListener('change', function (e) {
                 if (e.target.type !== 'checkbox') return;
                 self._syncFromInputs();
-                self._filter();
+                self._filter(true);
             });
         } else if (this.filterType === 'radio') {
             this.el.addEventListener('change', function (e) {
                 if (e.target.type !== 'radio') return;
                 self._syncFromInputs();
-                self._filter();
+                self._filter(true);
             });
         } else if (this.filterType === 'dropdown' || this.filterType === 'multiselect') {
             var select = this.el.querySelector('select');
             if (select) {
                 select.addEventListener('change', function () {
                     self._syncFromSelect(select);
-                    self._filter();
+                    self._filter(true);
                 });
             }
         }
@@ -142,6 +145,11 @@
     // CSS ENGINE - Instant filtering of target Loop Grid
     // =====================================================
     ACFTaxFilter.prototype._filter = function (animate) {
+        // FIX BUG 6: Default animate to true when not explicitly false
+        if (typeof animate === 'undefined') {
+            animate = true;
+        }
+
         // Update reset button visibility
         if (this.resetBtn) {
             this.resetBtn.style.display = this.activeTerms.length === 0 ? 'none' : 'inline-block';
@@ -149,12 +157,14 @@
 
         var target = this._getCSSTarget();
         if (!target) {
-            console.warn('ACF Taxonomy Filter: Could not find target Loop Grid with ID: ' + this.targetId);
+            if (this.targetId) {
+                console.warn('ACF Taxonomy Filter: Could not find target Loop Grid with ID: ' + this.targetId);
+            }
             return;
         }
 
         var items = this._getLoopItems(target);
-        if (!items) return;
+        if (!items || items.length === 0) return;
 
         var showAll = this.activeTerms.length === 0;
         var visibleCount = 0;
@@ -167,8 +177,6 @@
                 show = true;
             } else if (item.classList) {
                 for (var j = 0; j < this.activeTerms.length; j++) {
-                    // Exact class match: indexOf() substring matching would wrongly
-                    // match e.g. "news" against "acf-tfe-category-news-updates".
                     var cls = 'acf-tfe-' + this.taxonomy + '-' + this.activeTerms[j];
                     if (item.classList.contains(cls)) {
                         show = true;
@@ -184,17 +192,33 @@
         this._updateCount(visibleCount);
     };
 
+    // FIX BUG 1: Wrap querySelector in try/catch to prevent crash on invalid selectors
     ACFTaxFilter.prototype._getCSSTarget = function () {
         if (!this.targetId) return null;
-        
-        // Elementor uses .elementor-element-{widget_id} for widgets
-        var target = document.querySelector('.elementor-element-' + this.targetId);
-        
-        // Fallback: Check if user manually set it as a CSS ID (Mode 1 legacy compat)
-        if (!target) {
+
+        var target = null;
+
+        // Try as CSS ID first (the documented usage)
+        try {
             target = document.getElementById(this.targetId);
+        } catch (e) {
+            // Ignore
         }
-        
+
+        // Fallback: Elementor internal class .elementor-element-{id}
+        if (!target) {
+            try {
+                target = document.querySelector('.elementor-element-' + CSS.escape(this.targetId));
+            } catch (e) {
+                // CSS.escape may not exist in very old browsers; try without
+                try {
+                    target = document.querySelector('.elementor-element-' + this.targetId);
+                } catch (e2) {
+                    // Invalid selector, give up gracefully
+                }
+            }
+        }
+
         return target || null;
     };
 
@@ -217,11 +241,6 @@
     // =====================================================
     // SHARED HELPERS
     // =====================================================
-    /**
-     * Hidden-state transform per animation type.
-     * Supports every option exposed in the widget: fade, slide (up),
-     * slide-down, zoom-in, zoom-out.
-     */
     ACFTaxFilter.prototype._getHiddenTransform = function () {
         switch (this.animation) {
             case 'slide':      return 'translateY(12px)';
@@ -232,9 +251,9 @@
         }
     };
 
+    // FIX BUG 2: Force reflow before setting show state so transitions actually fire
     ACFTaxFilter.prototype._toggleItem = function (item, show, animate) {
-        // Cancel any pending hide so a quick re-show is not undone by a
-        // stale setTimeout from the previous filter pass (race condition).
+        // Cancel any pending hide timer (race condition fix)
         if (item._acfTfeHideTimer) {
             clearTimeout(item._acfTfeHideTimer);
             item._acfTfeHideTimer = null;
@@ -244,6 +263,9 @@
 
         if (anim === 'none') {
             item.style.display = show ? '' : 'none';
+            item.style.opacity = '';
+            item.style.transform = '';
+            item.style.transition = '';
             return;
         }
 
@@ -253,14 +275,19 @@
             : 'opacity 0.3s ease';
 
         if (show) {
+            // Step 1: Make visible but in hidden animation state
             item.style.display = '';
-            item.style.transition = transition;
+            item.style.transition = 'none'; // disable transition during setup
             item.style.opacity = '0';
             if (transform) item.style.transform = transform;
-            requestAnimationFrame(function () {
-                item.style.opacity = '1';
-                if (transform) item.style.transform = 'none';
-            });
+
+            // Step 2: Force reflow so the browser registers the hidden state
+            void item.offsetHeight;
+
+            // Step 3: Now enable transition and set final visible state
+            item.style.transition = transition;
+            item.style.opacity = '1';
+            if (transform) item.style.transform = 'none';
         } else {
             item.style.transition = transition;
             item.style.opacity = '0';
@@ -278,6 +305,7 @@
         this.countEl.style.display = 'inline';
     };
 
+    // FIX BUG 7: Explicit radio reset logic
     ACFTaxFilter.prototype._reset = function () {
         this.activeTerms = [];
         this._updateButtonUI();
@@ -287,20 +315,21 @@
 
         var radios = this.el.querySelectorAll('input[type="radio"]');
         for (var i = 0; i < radios.length; i++) {
-            radios[i].checked = !radios[i].getAttribute('data-term-slug');
+            var slug = radios[i].getAttribute('data-term-slug');
+            // "All" radio has slug="" or no slug at all — check it; uncheck all others
+            radios[i].checked = (slug === '' || slug === null);
         }
 
         var select = this.el.querySelector('select');
         if (select) {
             if (select.multiple) {
-                // Multi-select: deselect every option (selectedIndex=0 would select the first term)
                 for (var k = 0; k < select.options.length; k++) select.options[k].selected = false;
             } else {
                 select.selectedIndex = 0;
             }
         }
 
-        this._filter();
+        this._filter(true);
     };
 
     // =====================================================
@@ -321,9 +350,6 @@
         }
 
         for (var i = 0; i < widgets.length; i++) {
-            // Do NOT clear the init flag here: re-initializing the same element
-            // would stack duplicate event listeners (double-toggle bug). The
-            // editor re-renders fresh nodes, which carry no flag anyway.
             if (widgets[i].dataset.acfTfeInit === '1') continue;
             new ACFTaxFilter(widgets[i]);
         }

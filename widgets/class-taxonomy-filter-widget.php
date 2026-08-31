@@ -1002,8 +1002,11 @@ class Taxonomy_Filter_Widget extends Widget_Base {
         
         var iconHTML = '';
         if ( settings.filter_icon && settings.filter_icon.value ) {
-            var iconClass = settings.filter_icon.value;
-            iconHTML = '<span class="acf-tax-filter__item-icon"><i class="' + iconClass + '" aria-hidden="true"></i></span>';
+            if ( typeof settings.filter_icon.value === 'string' ) {
+                iconHTML = '<span class="acf-tax-filter__item-icon"><i class="' + settings.filter_icon.value + '" aria-hidden="true"></i></span>';
+            } else if ( settings.filter_icon.value.url ) {
+                iconHTML = '<span class="acf-tax-filter__item-icon"><img src="' + settings.filter_icon.value.url + '" aria-hidden="true" style="width:1em;height:1em;" /></span>';
+            }
         }
         
         if ( ! settings.target_id ) {
