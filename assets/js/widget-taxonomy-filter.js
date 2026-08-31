@@ -1,6 +1,6 @@
 /**
  * ACF Taxonomy Filter for Elementor - Frontend JS
- * Version 1.0.4
+ * Version 1.0.5
  *
  * CSS Engine - Instant filtering of a targeted Elementor Loop Grid widget.
  *
