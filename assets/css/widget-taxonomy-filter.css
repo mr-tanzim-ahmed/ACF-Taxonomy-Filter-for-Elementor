@@ -46,7 +46,7 @@
 .acf-tax-filter--align-left .acf-tax-filter__items { justify-content: flex-start; }
 .acf-tax-filter--align-center .acf-tax-filter__items { justify-content: center; }
 .acf-tax-filter--align-right .acf-tax-filter__items { justify-content: flex-end; }
-.acf-tax-filter--align-stretch .acf-tax-filter__items { justify-content: stretch; }
+/* stretch: "justify-content: stretch" is invalid in flexbox; expand children instead */
 .acf-tax-filter--align-stretch .acf-tax-filter__items > * { flex: 1; }
 
 /* Filter Items (Button / Label) */

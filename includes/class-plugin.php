@@ -15,7 +15,10 @@ class ACF_TFE_Plugin {
 
     private function __construct() {
         try {
-            if ( ! did_action( 'elementor/loaded' ) ) {
+            // class_exists() is load-order independent: all active plugin files are
+            // included before plugins_loaded fires, so this works regardless of
+            // whether Elementor's own plugins_loaded callback has run yet.
+            if ( ! did_action( 'elementor/loaded' ) && ! class_exists( '\Elementor\Plugin' ) ) {
                 add_action( 'admin_notices', [ $this, 'admin_notice_missing_elementor' ] );
                 return;
             }

@@ -1,6 +1,6 @@
 /**
  * ACF Taxonomy Filter for Elementor - Frontend JS
- * Version 1.0.3
+ * Version 1.0.4
  *
  * CSS Engine - Instant filtering of a targeted Elementor Loop Grid widget.
  *
@@ -34,7 +34,7 @@
         // Wait a small tick on load to ensure Elementor grids are parsed
         var self = this;
         setTimeout(function() {
-            self._filter(); // Init counts correctly on load
+            self._filter(false); // Init counts correctly on load (no animation flash)
         }, 100);
     }
 
@@ -141,7 +141,7 @@
     // =====================================================
     // CSS ENGINE - Instant filtering of target Loop Grid
     // =====================================================
-    ACFTaxFilter.prototype._filter = function () {
+    ACFTaxFilter.prototype._filter = function (animate) {
         // Update reset button visibility
         if (this.resetBtn) {
             this.resetBtn.style.display = this.activeTerms.length === 0 ? 'none' : 'inline-block';
@@ -154,29 +154,30 @@
         }
 
         var items = this._getLoopItems(target);
-        if (!items || items.length === 0) return;
+        if (!items) return;
 
         var showAll = this.activeTerms.length === 0;
         var visibleCount = 0;
 
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
-            var classes = item.className || '';
             var show = false;
 
             if (showAll) {
                 show = true;
-            } else {
+            } else if (item.classList) {
                 for (var j = 0; j < this.activeTerms.length; j++) {
+                    // Exact class match: indexOf() substring matching would wrongly
+                    // match e.g. "news" against "acf-tfe-category-news-updates".
                     var cls = 'acf-tfe-' + this.taxonomy + '-' + this.activeTerms[j];
-                    if (classes.indexOf(cls) !== -1) {
+                    if (item.classList.contains(cls)) {
                         show = true;
                         break;
                     }
                 }
             }
 
-            this._toggleItem(item, show);
+            this._toggleItem(item, show, animate);
             if (show) visibleCount++;
         }
 
@@ -216,43 +217,58 @@
     // =====================================================
     // SHARED HELPERS
     // =====================================================
-    ACFTaxFilter.prototype._toggleItem = function (item, show) {
-        if (this.animation === 'fade') {
-            if (show) {
-                item.style.display = '';
-                item.style.opacity = '0';
-                item.style.transition = 'opacity 0.3s ease';
-                requestAnimationFrame(function () {
-                    item.style.opacity = '1';
-                });
-            } else {
-                item.style.opacity = '0';
-                item.style.transition = 'opacity 0.3s ease';
-                setTimeout(function () {
-                    item.style.display = 'none';
-                }, 300);
-            }
-        } else if (this.animation === 'slide') {
-            if (show) {
-                item.style.display = '';
-                item.style.transform = 'scale(0.95)';
-                item.style.opacity = '0';
-                item.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-                requestAnimationFrame(function () {
-                    item.style.transform = 'scale(1)';
-                    item.style.opacity = '1';
-                });
-            } else {
-                item.style.opacity = '0';
-                item.style.transform = 'scale(0.95)';
-                item.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-                setTimeout(function () {
-                    item.style.display = 'none';
-                }, 300);
-            }
-        } else {
-            // No animation
+    /**
+     * Hidden-state transform per animation type.
+     * Supports every option exposed in the widget: fade, slide (up),
+     * slide-down, zoom-in, zoom-out.
+     */
+    ACFTaxFilter.prototype._getHiddenTransform = function () {
+        switch (this.animation) {
+            case 'slide':      return 'translateY(12px)';
+            case 'slide-down': return 'translateY(-12px)';
+            case 'zoom-in':    return 'scale(0.9)';
+            case 'zoom-out':   return 'scale(1.1)';
+            default:           return ''; // fade / none
+        }
+    };
+
+    ACFTaxFilter.prototype._toggleItem = function (item, show, animate) {
+        // Cancel any pending hide so a quick re-show is not undone by a
+        // stale setTimeout from the previous filter pass (race condition).
+        if (item._acfTfeHideTimer) {
+            clearTimeout(item._acfTfeHideTimer);
+            item._acfTfeHideTimer = null;
+        }
+
+        var anim = (animate === false) ? 'none' : this.animation;
+
+        if (anim === 'none') {
             item.style.display = show ? '' : 'none';
+            return;
+        }
+
+        var transform  = this._getHiddenTransform();
+        var transition = transform
+            ? 'opacity 0.3s ease, transform 0.3s ease'
+            : 'opacity 0.3s ease';
+
+        if (show) {
+            item.style.display = '';
+            item.style.transition = transition;
+            item.style.opacity = '0';
+            if (transform) item.style.transform = transform;
+            requestAnimationFrame(function () {
+                item.style.opacity = '1';
+                if (transform) item.style.transform = 'none';
+            });
+        } else {
+            item.style.transition = transition;
+            item.style.opacity = '0';
+            if (transform) item.style.transform = transform;
+            item._acfTfeHideTimer = setTimeout(function () {
+                item.style.display = 'none';
+                item._acfTfeHideTimer = null;
+            }, 300);
         }
     };
 
@@ -275,7 +291,14 @@
         }
 
         var select = this.el.querySelector('select');
-        if (select) select.selectedIndex = 0;
+        if (select) {
+            if (select.multiple) {
+                // Multi-select: deselect every option (selectedIndex=0 would select the first term)
+                for (var k = 0; k < select.options.length; k++) select.options[k].selected = false;
+            } else {
+                select.selectedIndex = 0;
+            }
+        }
 
         this._filter();
     };
@@ -298,8 +321,10 @@
         }
 
         for (var i = 0; i < widgets.length; i++) {
-            // Reset init flag to allow re-initialization (e.g., in Elementor editor)
-            delete widgets[i].dataset.acfTfeInit;
+            // Do NOT clear the init flag here: re-initializing the same element
+            // would stack duplicate event listeners (double-toggle bug). The
+            // editor re-renders fresh nodes, which carry no flag anyway.
+            if (widgets[i].dataset.acfTfeInit === '1') continue;
             new ACFTaxFilter(widgets[i]);
         }
     }

@@ -1011,8 +1011,12 @@ class Taxonomy_Filter_Widget extends Widget_Base {
         }
         #>
         <div class="{{ wrapperCls }}"
+             data-acf-tfe-widget="editor-preview"
+             data-taxonomy="{{ settings.taxonomy || 'category' }}"
+             data-post-type="{{ settings.post_type || 'post' }}"
              data-filter-type="{{ filterType }}"
              data-animation="{{ settings.filter_animation || 'fade' }}"
+             data-target-id="{{ ( settings.target_id || '' ).replace( /^#+/, '' ) }}"
              role="tablist">
 
             <# if ( showTitle && titleText ) { #>
