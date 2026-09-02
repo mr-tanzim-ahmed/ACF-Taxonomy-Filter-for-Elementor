@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.7] - New Style Controls & Fixes
+- Added: Comprehensive Icon styling section in the Elementor Style tab (size, spacing, normal/hover/active colors).
+- Added: Elementor Hover Animation support for Buttons (Grow, Shrink, Pulse, etc.).
+- Added: Item Margin controls for Buttons and Checkbox/Radio layouts for better spacing flexibility.
+- Fixed: Taxonomy query logic now captures all ACF custom taxonomies reliably by using `get_taxonomies()` globally, instead of strictly relying on post-type associations.
+
 ## [1.0.6] - Bug Fixes & Stability
 
 - **Fixed:** `querySelector` crash when user accidentally includes `#` or `.` in the CSS ID field — now sanitized and wrapped in try/catch.

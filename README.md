@@ -6,7 +6,7 @@
 [![Elementor](https://img.shields.io/badge/Elementor-Pro-purple?logo=elementor)](https://elementor.com/)
 [![PHP](https://img.shields.io/badge/PHP-7.4%2B-777BB4?logo=php&logoColor=white)](https://www.php.net/)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-green)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.0.6-orange)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-1.0.7-orange)](CHANGELOG.md)
 
 ---
 
@@ -160,6 +160,12 @@ The widget shows a clear warning message in the Elementor editor telling you to 
 ---
 
 ## 📝 Changelog
+
+### 1.0.7 — New Style Controls & Fixes
+- **Added:** Comprehensive Icon styling section (size, spacing, normal/hover/active colors).
+- **Added:** Elementor Hover Animation support for Buttons (Grow, Shrink, Pulse, etc.).
+- **Added:** Margin controls for Buttons and Checkbox/Radio items.
+- **Fixed:** Taxonomy query logic now captures all ACF custom taxonomies reliably by using `get_taxonomies()` globally.
 
 ### 1.0.6 — Bug Fixes & Stability
 - **Fixed:** `querySelector` crash when user accidentally includes `#` or `.` in the CSS ID field

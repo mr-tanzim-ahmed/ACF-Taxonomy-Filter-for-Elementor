@@ -33,6 +33,7 @@ class Taxonomy_Filter_Widget extends Widget_Base {
         $this->register_style_container_section();
         $this->register_style_title_section();
         $this->register_style_button_section();
+        $this->register_style_icon_section();
         $this->register_style_dropdown_section();
         $this->register_style_checkbox_radio_section();
         $this->register_style_count_section();
@@ -482,6 +483,11 @@ class Taxonomy_Filter_Widget extends Widget_Base {
             ],
         ] );
 
+        $this->add_control( 'btn_hover_animation', [
+            'label' => esc_html__( 'Hover Animation', 'elementor' ),
+            'type'  => Controls_Manager::HOVER_ANIMATION,
+        ] );
+
         $this->end_controls_tab();
 
         // --- ACTIVE TAB ---
@@ -534,6 +540,15 @@ class Taxonomy_Filter_Widget extends Widget_Base {
             ],
         ] );
 
+        $this->add_responsive_control( 'btn_margin', [
+            'label'      => esc_html__( 'Margin', 'acf-taxonomy-filter-elementor' ),
+            'type'       => Controls_Manager::DIMENSIONS,
+            'size_units' => [ 'px', '%', 'em' ],
+            'selectors'  => [
+                '{{WRAPPER}} .acf-tax-filter__item' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+            ],
+        ] );
+
         $this->add_responsive_control( 'btn_min_width', [
             'label'     => esc_html__( 'Min Width', 'acf-taxonomy-filter-elementor' ),
             'type'      => Controls_Manager::SLIDER,
@@ -542,6 +557,87 @@ class Taxonomy_Filter_Widget extends Widget_Base {
                 '{{WRAPPER}} .acf-tax-filter__item' => 'min-width: {{SIZE}}{{UNIT}};',
             ],
         ] );
+
+        $this->end_controls_section();
+    }
+
+    protected function register_style_icon_section() {
+        $this->start_controls_section( 'section_style_icon', [
+            'label'     => esc_html__( 'Icon', 'acf-taxonomy-filter-elementor' ),
+            'tab'       => Controls_Manager::TAB_STYLE,
+            'condition' => [
+                'filter_type!' => [ 'dropdown', 'multiselect' ],
+                'filter_icon[value]!' => '',
+            ],
+        ] );
+
+        $this->add_responsive_control( 'icon_size', [
+            'label'     => esc_html__( 'Size', 'acf-taxonomy-filter-elementor' ),
+            'type'      => Controls_Manager::SLIDER,
+            'range'     => [ 'px' => [ 'min' => 6, 'max' => 100 ] ],
+            'selectors' => [
+                '{{WRAPPER}} .acf-tax-filter__item-icon i' => 'font-size: {{SIZE}}{{UNIT}};',
+                '{{WRAPPER}} .acf-tax-filter__item-icon svg' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+                '{{WRAPPER}} .acf-tax-filter__item-icon img' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+            ],
+        ] );
+
+        $this->add_responsive_control( 'icon_spacing', [
+            'label'     => esc_html__( 'Spacing', 'acf-taxonomy-filter-elementor' ),
+            'type'      => Controls_Manager::SLIDER,
+            'range'     => [ 'px' => [ 'min' => 0, 'max' => 50 ] ],
+            'selectors' => [
+                '{{WRAPPER}} .acf-tax-filter__item-icon' => 'margin-right: {{SIZE}}{{UNIT}};',
+            ],
+        ] );
+
+        $this->start_controls_tabs( 'tabs_icon_style' );
+
+        $this->start_controls_tab( 'tab_icon_normal', [
+            'label' => esc_html__( 'Normal', 'acf-taxonomy-filter-elementor' ),
+        ] );
+
+        $this->add_control( 'icon_color', [
+            'label'     => esc_html__( 'Color', 'acf-taxonomy-filter-elementor' ),
+            'type'      => Controls_Manager::COLOR,
+            'selectors' => [
+                '{{WRAPPER}} .acf-tax-filter__item-icon i' => 'color: {{VALUE}};',
+                '{{WRAPPER}} .acf-tax-filter__item-icon svg' => 'fill: {{VALUE}};',
+            ],
+        ] );
+
+        $this->end_controls_tab();
+
+        $this->start_controls_tab( 'tab_icon_hover', [
+            'label' => esc_html__( 'Hover', 'acf-taxonomy-filter-elementor' ),
+        ] );
+
+        $this->add_control( 'icon_hover_color', [
+            'label'     => esc_html__( 'Color', 'acf-taxonomy-filter-elementor' ),
+            'type'      => Controls_Manager::COLOR,
+            'selectors' => [
+                '{{WRAPPER}} .acf-tax-filter__item:hover .acf-tax-filter__item-icon i' => 'color: {{VALUE}};',
+                '{{WRAPPER}} .acf-tax-filter__item:hover .acf-tax-filter__item-icon svg' => 'fill: {{VALUE}};',
+            ],
+        ] );
+
+        $this->end_controls_tab();
+
+        $this->start_controls_tab( 'tab_icon_active', [
+            'label' => esc_html__( 'Active', 'acf-taxonomy-filter-elementor' ),
+        ] );
+
+        $this->add_control( 'icon_active_color', [
+            'label'     => esc_html__( 'Color', 'acf-taxonomy-filter-elementor' ),
+            'type'      => Controls_Manager::COLOR,
+            'selectors' => [
+                '{{WRAPPER}} .acf-tax-filter__item--active .acf-tax-filter__item-icon i' => 'color: {{VALUE}};',
+                '{{WRAPPER}} .acf-tax-filter__item--active .acf-tax-filter__item-icon svg' => 'fill: {{VALUE}};',
+            ],
+        ] );
+
+        $this->end_controls_tab();
+        $this->end_controls_tabs();
 
         $this->end_controls_section();
     }
@@ -656,6 +752,15 @@ class Taxonomy_Filter_Widget extends Widget_Base {
             'size_units' => [ 'px', 'em' ],
             'selectors'  => [
                 '{{WRAPPER}} .acf-tax-filter__item' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+            ],
+        ] );
+
+        $this->add_responsive_control( 'check_item_margin', [
+            'label'      => esc_html__( 'Item Margin', 'acf-taxonomy-filter-elementor' ),
+            'type'       => Controls_Manager::DIMENSIONS,
+            'size_units' => [ 'px', 'em' ],
+            'selectors'  => [
+                '{{WRAPPER}} .acf-tax-filter__item' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ] );
 
@@ -881,6 +986,11 @@ class Taxonomy_Filter_Widget extends Widget_Base {
             }
         }
 
+        $hover_anim_class = '';
+        if ( ! empty( $settings['btn_hover_animation'] ) ) {
+            $hover_anim_class = ' elementor-animation-' . esc_attr( $settings['btn_hover_animation'] );
+        }
+
         // Open main wrapper
         ?>
         <div class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>"
@@ -918,7 +1028,7 @@ class Taxonomy_Filter_Widget extends Widget_Base {
                     if ( $show_all ) :
                         if ( 'button' === $filter_type ) : ?>
                             <button type="button"
-                                    class="acf-tax-filter__item acf-tax-filter__item--all acf-tax-filter__item--active"
+                                    class="acf-tax-filter__item acf-tax-filter__item--all acf-tax-filter__item--active<?php echo esc_attr( $hover_anim_class ); ?>"
                                     data-term-slug=""
                                     role="tab"
                                     aria-selected="true"
@@ -945,7 +1055,7 @@ class Taxonomy_Filter_Widget extends Widget_Base {
                         switch ( $filter_type ) {
                             case 'button': ?>
                                 <button type="button"
-                                        class="acf-tax-filter__item<?php echo esc_attr( $child_class ); ?>"
+                                        class="acf-tax-filter__item<?php echo esc_attr( $child_class . $hover_anim_class ); ?>"
                                         data-term-slug="<?php echo esc_attr( $term->slug ); ?>"
                                         data-term-id="<?php echo esc_attr( $term->term_id ); ?>"
                                         role="tab"
@@ -1020,6 +1130,11 @@ class Taxonomy_Filter_Widget extends Widget_Base {
             }
         }
         
+        var hoverAnimClass = '';
+        if ( settings.btn_hover_animation ) {
+            hoverAnimClass = ' elementor-animation-' + settings.btn_hover_animation;
+        }
+
         if ( ! settings.target_id ) {
             print( '<div class="elementor-alert elementor-alert-warning">Please enter a Target CSS ID in the Loop Action settings to link this filter to your Loop Grid.</div>' );
         }
@@ -1052,7 +1167,7 @@ class Taxonomy_Filter_Widget extends Widget_Base {
                 <# } else {
                     if ( showAll ) {
                         if ( filterType === 'button' ) { #>
-                            <button type="button" class="acf-tax-filter__item acf-tax-filter__item--all acf-tax-filter__item--active" role="tab" aria-selected="true" aria-pressed="true">
+                            <button type="button" class="acf-tax-filter__item acf-tax-filter__item--all acf-tax-filter__item--active{{ hoverAnimClass }}" role="tab" aria-selected="true" aria-pressed="true">
                                 <span class="acf-tax-filter__item-name">{{{ iconHTML }}}{{ allLabel }}</span>
                             </button>
                         <# } else if ( filterType === 'radio' ) { #>
@@ -1064,10 +1179,10 @@ class Taxonomy_Filter_Widget extends Widget_Base {
                     }
                     #>
                     <# if ( filterType === 'button' ) { #>
-                        <button type="button" class="acf-tax-filter__item" role="tab" aria-selected="false" aria-pressed="false">
+                        <button type="button" class="acf-tax-filter__item{{ hoverAnimClass }}" role="tab" aria-selected="false" aria-pressed="false">
                             <span class="acf-tax-filter__item-name">{{{ iconHTML }}}Sample Term 1</span>
                         </button>
-                        <button type="button" class="acf-tax-filter__item" role="tab" aria-selected="false" aria-pressed="false">
+                        <button type="button" class="acf-tax-filter__item{{ hoverAnimClass }}" role="tab" aria-selected="false" aria-pressed="false">
                             <span class="acf-tax-filter__item-name">{{{ iconHTML }}}Sample Term 2</span>
                         </button>
                     <# } else if ( filterType === 'checkbox' ) { #>
