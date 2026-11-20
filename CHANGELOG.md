@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.8] - Stability & Elementor Compatibility
+- Fixed: Registered frontend assets for both normal frontend use and Elementor editor contexts.
+- Fixed: Sanitized taxonomy, post type, layout, alignment, animation, and target CSS ID values.
+- Added: Dynamic widget initialization and target grid observation for Elementor updates and AJAX/pagination changes.
+- Improved: Accessibility semantics now use native controls with a filter group and pressed states.
+- Improved: Plugin text-domain loading and WordPress debug error logging.
+- Improved: Added activation/deactivation hooks, version tracking, dependency actions, and multisite uninstall cleanup.
+
 ## [1.0.7] - New Style Controls & Fixes
 - Added: Comprehensive Icon styling section in the Elementor Style tab (size, spacing, normal/hover/active colors).
 - Added: Elementor Hover Animation support for Buttons (Grow, Shrink, Pulse, etc.).

@@ -60,7 +60,9 @@ class ACF_TFE_Plugin {
                 }
             }
         } catch ( \Throwable $e ) {
-            // Silently fail - never break post rendering
+            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+                error_log( 'ACF TFE Taxonomy Class Error: ' . $e->getMessage() );
+            }
         }
         return $classes;
     }
@@ -75,7 +77,9 @@ class ACF_TFE_Plugin {
                 ]
             );
         } catch ( \Throwable $e ) {
-            // Silently fail
+            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+                error_log( 'ACF TFE Category Registration Error: ' . $e->getMessage() );
+            }
         }
     }
 
@@ -96,12 +100,43 @@ class ACF_TFE_Plugin {
     }
 
     public function admin_notice_missing_elementor() {
-        if ( isset( $_GET['activate'] ) ) unset( $_GET['activate'] );
         $message = sprintf(
             esc_html__( '"%1$s" requires "%2$s" to be installed and activated.', 'acf-taxonomy-filter-elementor' ),
             '<strong>' . esc_html__( 'ACF Taxonomy Filter for Elementor', 'acf-taxonomy-filter-elementor' ) . '</strong>',
             '<strong>' . esc_html__( 'Elementor', 'acf-taxonomy-filter-elementor' ) . '</strong>'
         );
-        printf( '<div class="notice notice-warning is-dismissible"><p>%1$s</p></div>', $message );
+
+        $elementor_plugin = 'elementor/elementor.php';
+        $elementor_action = '';
+        if ( file_exists( WP_PLUGIN_DIR . '/' . $elementor_plugin ) ) {
+            $elementor_action = wp_nonce_url(
+                add_query_arg(
+                    [
+                        'action' => 'activate',
+                        'plugin' => $elementor_plugin,
+                    ],
+                    admin_url( 'plugins.php' )
+                ),
+                'activate-plugin_' . $elementor_plugin
+            );
+        } else {
+            $elementor_action = add_query_arg(
+                [
+                    's'    => 'Elementor',
+                    'tab'  => 'search',
+                    'type' => 'term',
+                ],
+                admin_url( 'plugin-install.php' )
+            );
+        }
+
+        printf(
+            '<div class="notice notice-warning is-dismissible"><p>%1$s</p><p><a class="button button-primary" href="%2$s">%3$s</a></p></div>',
+            $message,
+            esc_url( $elementor_action ),
+            file_exists( WP_PLUGIN_DIR . '/' . $elementor_plugin )
+                ? esc_html__( 'Activate Elementor', 'acf-taxonomy-filter-elementor' )
+                : esc_html__( 'Install Elementor', 'acf-taxonomy-filter-elementor' )
+        );
     }
 }

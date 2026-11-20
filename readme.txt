@@ -5,7 +5,7 @@ Tags: elementor, taxonomy filter, acf, loop grid, post filter, category filter, 
 Requires at least: 6.0
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.0.5
+Stable tag: 1.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -65,6 +65,23 @@ Yes. Any public post type and any public taxonomy — including those registered
 Yes. Use the Checkbox or Multi-Select filter types to let visitors combine multiple taxonomy terms.
 
 == Changelog ==
+
+= 1.0.8 =
+* Fixed: Asset registration now works reliably in Elementor frontend and editor preview contexts.
+* Fixed: Target CSS IDs and widget settings are validated and sanitized before rendering or filtering.
+* Improved: Plugin activation/deactivation lifecycle and WordPress multisite uninstall cleanup.
+* Added: Dynamic re-initialization and target-grid observation for editor changes and AJAX/pagination updates.
+* Improved: Filter accessibility markup and plugin text-domain loading.
+* Improved: Debug logging now reports initialization failures instead of failing silently.
+
+= 1.0.7 =
+* Added: Comprehensive icon styling and Elementor hover animations.
+* Added: Margin controls for buttons and checkbox/radio items.
+* Fixed: Taxonomy discovery now includes public taxonomies registered globally.
+
+= 1.0.6 =
+* Fixed: CSS ID handling, animation transitions, editor assets, and radio reset behavior.
+* Improved: Elementor style specificity and exact taxonomy class matching.
 
 = 1.0.5 =
 * Fixed: Elementor detection could fail depending on plugin load order, showing a false "Elementor missing" notice.

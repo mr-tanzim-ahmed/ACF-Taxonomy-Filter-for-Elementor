@@ -6,7 +6,7 @@
 [![Elementor](https://img.shields.io/badge/Elementor-Pro-purple?logo=elementor)](https://elementor.com/)
 [![PHP](https://img.shields.io/badge/PHP-7.4%2B-777BB4?logo=php&logoColor=white)](https://www.php.net/)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-green)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.0.7-orange)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-1.0.8-orange)](CHANGELOG.md)
 
 ---
 
@@ -130,8 +130,9 @@ Tested and working across all modern browsers:
 
 Built with WCAG best practices:
 
-- Semantic `role="tablist"` and `role="tab"` markup
-- Dynamic `aria-selected` and `aria-pressed` state updates
+- Native button, checkbox, radio, and select controls
+- Group and pressed-state semantics for filter controls
+- Dynamic `aria-pressed` state updates for button filters
 - Full keyboard navigation with `focus-visible` outlines
 - Screen reader friendly labels
 
@@ -160,6 +161,14 @@ The widget shows a clear warning message in the Elementor editor telling you to 
 ---
 
 ## 📝 Changelog
+
+### 1.0.8 — Stability & Elementor Compatibility
+- **Fixed:** Asset registration now works reliably in Elementor frontend and editor preview contexts.
+- **Fixed:** Target CSS IDs and widget settings are validated and sanitized before rendering or filtering.
+- **Added:** Dynamic re-initialization and grid observation for Elementor updates and AJAX/pagination changes.
+- **Improved:** Activation/deactivation lifecycle, dependency notice, and multisite uninstall cleanup.
+- **Improved:** Filter accessibility semantics and plugin text-domain loading.
+- **Improved:** Debug logging now reports failures instead of failing silently.
 
 ### 1.0.7 — New Style Controls & Fixes
 - **Added:** Comprehensive Icon styling section (size, spacing, normal/hover/active colors).

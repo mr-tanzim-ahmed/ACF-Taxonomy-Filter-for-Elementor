@@ -23,9 +23,9 @@ class Taxonomy_Filter_Widget extends Widget_Base {
 
     protected function register_controls() {
         // CONTENT TAB
+        $this->register_content_query_section();
         $this->register_content_loop_section();
         $this->register_content_filter_section();
-        $this->register_content_query_section();
         $this->register_content_display_section();
         $this->register_content_labels_section();
 
@@ -932,13 +932,20 @@ class Taxonomy_Filter_Widget extends Widget_Base {
     protected function render() {
         $settings = $this->get_settings_for_display();
 
-        $taxonomy    = sanitize_text_field( $settings['taxonomy'] ?? 'category' );
-        $post_type   = sanitize_text_field( $settings['post_type'] ?? 'post' );
-        $filter_type = $settings['filter_type'] ?? 'button';
+        $taxonomy    = acf_tfe_sanitize_taxonomy( $settings['taxonomy'] ?? 'category' );
+        $post_type   = acf_tfe_sanitize_post_type( $settings['post_type'] ?? 'post' );
+        $filter_type = sanitize_key( $settings['filter_type'] ?? 'button' );
+        if ( ! in_array( $filter_type, [ 'button', 'checkbox', 'radio', 'dropdown', 'multiselect' ], true ) ) {
+            $filter_type = 'button';
+        }
         $widget_id   = $this->get_id();
-        $layout      = $settings['layout'] ?? 'horizontal';
-        $alignment   = $settings['alignment'] ?? 'left';
-        $animation   = $settings['filter_animation'] ?? 'fade';
+        $layout      = sanitize_key( $settings['layout'] ?? 'horizontal' );
+        $alignment   = sanitize_key( $settings['alignment'] ?? 'left' );
+        $animation   = sanitize_key( $settings['filter_animation'] ?? 'fade' );
+
+        if ( ! in_array( $layout, [ 'horizontal', 'vertical', 'grid' ], true ) ) $layout = 'horizontal';
+        if ( ! in_array( $alignment, [ 'left', 'center', 'right', 'stretch' ], true ) ) $alignment = 'left';
+        if ( ! in_array( $animation, [ 'none', 'fade', 'slide', 'slide-down', 'zoom-in', 'zoom-out' ], true ) ) $animation = 'fade';
 
         // Build get_terms args
         $args = [
@@ -970,9 +977,9 @@ class Taxonomy_Filter_Widget extends Widget_Base {
         $all_label      = $settings['all_button_label'] ?? __( 'All', 'acf-taxonomy-filter-elementor' );
         $show_count     = 'yes' === ( $settings['show_term_count'] ?? 'no' );
         $show_hierarchy = 'yes' === ( $settings['show_hierarchy'] ?? 'no' );
-        $target_id      = $settings['target_id'] ?? '';
+        $target_id      = sanitize_html_class( ltrim( sanitize_text_field( $settings['target_id'] ?? '' ), '#.' ) );
 
-        if ( \Elementor\Plugin::$instance->editor->is_edit_mode() && empty( $target_id ) ) {
+        if ( isset( \Elementor\Plugin::$instance->editor ) && \Elementor\Plugin::$instance->editor->is_edit_mode() && empty( $target_id ) ) {
             echo '<div class="elementor-alert elementor-alert-warning">' . esc_html__( 'Please enter a Target CSS ID in the Loop Action settings to link this filter to your Loop Grid.', 'acf-taxonomy-filter-elementor' ) . '</div>';
         }
 
@@ -1000,7 +1007,7 @@ class Taxonomy_Filter_Widget extends Widget_Base {
              data-filter-type="<?php echo esc_attr( $filter_type ); ?>"
              data-animation="<?php echo esc_attr( $animation ); ?>"
              data-target-id="<?php echo esc_attr( ltrim( $target_id, '#' ) ); ?>"
-             role="tablist"
+             role="group"
              aria-label="<?php esc_attr_e( 'Filter by taxonomy', 'acf-taxonomy-filter-elementor' ); ?>">
 
             <?php if ( 'yes' === ( $settings['show_taxonomy_title'] ?? 'no' ) && ! empty( $settings['taxonomy_title_text'] ) ) : ?>
@@ -1030,7 +1037,6 @@ class Taxonomy_Filter_Widget extends Widget_Base {
                             <button type="button"
                                     class="acf-tax-filter__item acf-tax-filter__item--all acf-tax-filter__item--active<?php echo esc_attr( $hover_anim_class ); ?>"
                                     data-term-slug=""
-                                    role="tab"
                                     aria-selected="true"
                                     aria-pressed="true">
                                 <span class="acf-tax-filter__item-name"><?php echo $icon_html . esc_html( $all_label ); ?></span>
@@ -1058,7 +1064,6 @@ class Taxonomy_Filter_Widget extends Widget_Base {
                                         class="acf-tax-filter__item<?php echo esc_attr( $child_class . $hover_anim_class ); ?>"
                                         data-term-slug="<?php echo esc_attr( $term->slug ); ?>"
                                         data-term-id="<?php echo esc_attr( $term->term_id ); ?>"
-                                        role="tab"
                                         aria-selected="false"
                                         aria-pressed="false">
                                     <span class="acf-tax-filter__item-name"><?php echo $icon_html . esc_html( $term->name ); ?></span>
@@ -1146,7 +1151,8 @@ class Taxonomy_Filter_Widget extends Widget_Base {
              data-filter-type="{{ filterType }}"
              data-animation="{{ settings.filter_animation || 'fade' }}"
              data-target-id="{{ ( settings.target_id || '' ).replace( /^#+/, '' ) }}"
-             role="tablist">
+             role="group"
+             aria-label="Filter by taxonomy">
 
             <# if ( showTitle && titleText ) { #>
                 <h4 class="acf-tax-filter__title">{{ titleText }}</h4>
@@ -1167,7 +1173,7 @@ class Taxonomy_Filter_Widget extends Widget_Base {
                 <# } else {
                     if ( showAll ) {
                         if ( filterType === 'button' ) { #>
-                            <button type="button" class="acf-tax-filter__item acf-tax-filter__item--all acf-tax-filter__item--active{{ hoverAnimClass }}" role="tab" aria-selected="true" aria-pressed="true">
+                            <button type="button" class="acf-tax-filter__item acf-tax-filter__item--all acf-tax-filter__item--active{{ hoverAnimClass }}" aria-pressed="true">
                                 <span class="acf-tax-filter__item-name">{{{ iconHTML }}}{{ allLabel }}</span>
                             </button>
                         <# } else if ( filterType === 'radio' ) { #>
@@ -1179,10 +1185,10 @@ class Taxonomy_Filter_Widget extends Widget_Base {
                     }
                     #>
                     <# if ( filterType === 'button' ) { #>
-                        <button type="button" class="acf-tax-filter__item{{ hoverAnimClass }}" role="tab" aria-selected="false" aria-pressed="false">
+                        <button type="button" class="acf-tax-filter__item{{ hoverAnimClass }}" aria-pressed="false">
                             <span class="acf-tax-filter__item-name">{{{ iconHTML }}}Sample Term 1</span>
                         </button>
-                        <button type="button" class="acf-tax-filter__item{{ hoverAnimClass }}" role="tab" aria-selected="false" aria-pressed="false">
+                        <button type="button" class="acf-tax-filter__item{{ hoverAnimClass }}" aria-pressed="false">
                             <span class="acf-tax-filter__item-name">{{{ iconHTML }}}Sample Term 2</span>
                         </button>
                     <# } else if ( filterType === 'checkbox' ) { #>

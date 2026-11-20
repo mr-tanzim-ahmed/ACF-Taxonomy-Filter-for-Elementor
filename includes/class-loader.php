@@ -6,7 +6,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class ACF_TFE_Loader {
 
     public function __construct() {
+        $this->register_frontend_assets();
+
         add_action( 'elementor/frontend/after_register_scripts', [ $this, 'register_frontend_assets' ] );
+        add_action( 'elementor/editor/after_enqueue_scripts', [ $this, 'register_frontend_assets' ] );
         add_action( 'elementor/editor/after_enqueue_styles', [ $this, 'editor_styles' ] );
     }
 

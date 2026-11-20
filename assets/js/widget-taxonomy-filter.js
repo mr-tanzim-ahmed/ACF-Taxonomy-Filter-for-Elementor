@@ -1,6 +1,6 @@
 /**
  * ACF Taxonomy Filter for Elementor - Frontend JS
- * Version 1.0.6
+ * Version 1.0.8
  *
  * CSS Engine - Instant filtering of a targeted Elementor Loop Grid widget.
  *
@@ -34,6 +34,7 @@
         this.countTpl    = this.countEl ? (this.countEl.getAttribute('data-template') || '{count} results') : '';
 
         this._bindEvents();
+        this._observeTarget();
         // Wait a small tick on load to ensure Elementor grids are parsed
         var self = this;
         setTimeout(function() {
@@ -49,7 +50,7 @@
 
         if (this.filterType === 'button') {
             this.el.addEventListener('click', function (e) {
-                var btn = e.target.closest('.acf-tax-filter__item');
+                var btn = e.target.closest ? e.target.closest('.acf-tax-filter__item') : null;
                 if (!btn) return;
                 e.preventDefault();
                 var slug = btn.getAttribute('data-term-slug');
@@ -162,6 +163,9 @@
             }
             return;
         }
+        if (!this.targetObserver) {
+            this._observeTarget();
+        }
 
         var items = this._getLoopItems(target);
         if (!items || items.length === 0) return;
@@ -208,18 +212,31 @@
         // Fallback: Elementor internal class .elementor-element-{id}
         if (!target) {
             try {
-                target = document.querySelector('.elementor-element-' + CSS.escape(this.targetId));
-            } catch (e) {
-                // CSS.escape may not exist in very old browsers; try without
-                try {
+                if (window.CSS && typeof window.CSS.escape === 'function') {
+                    target = document.querySelector('.elementor-element-' + window.CSS.escape(this.targetId));
+                } else {
                     target = document.querySelector('.elementor-element-' + this.targetId);
-                } catch (e2) {
-                    // Invalid selector, give up gracefully
                 }
+            } catch (e) {
+                // Invalid selector, give up gracefully
             }
         }
 
         return target || null;
+    };
+
+    ACFTaxFilter.prototype._observeTarget = function () {
+        if (typeof MutationObserver === 'undefined') return;
+
+        var self = this;
+        var target = this._getCSSTarget();
+        if (!target) return;
+
+        var observer = new MutationObserver(function () {
+            self._filter(false);
+        });
+        observer.observe(target, { childList: true, subtree: true });
+        this.targetObserver = observer;
     };
 
     ACFTaxFilter.prototype._getLoopItems = function (target) {
@@ -353,6 +370,16 @@
             if (widgets[i].dataset.acfTfeInit === '1') continue;
             new ACFTaxFilter(widgets[i]);
         }
+    }
+
+    if (typeof MutationObserver !== 'undefined') {
+        var widgetObserver = new MutationObserver(function () {
+            initWidgets(document);
+        });
+        widgetObserver.observe(document.documentElement, {
+            childList: true,
+            subtree: true
+        });
     }
 
     // Elementor frontend handler
