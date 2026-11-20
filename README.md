@@ -1,6 +1,6 @@
 # ACF Taxonomy Filter for Elementor
 
-**The fastest taxonomy filter widget for Elementor Pro Loop Grids — instant CSS-based filtering with zero AJAX, zero page reloads, and zero database overhead.** Filter WordPress posts, WooCommerce products, and custom post types by categories, tags, or ACF custom taxonomies using buttons, checkboxes, radio buttons, dropdowns, or multi-select — all with smooth animations and full Elementor visual style controls.
+**Filter Elementor Pro Loop Grids by category, tag, or custom taxonomy—without a page reload or a new AJAX request for each filter change.** ACF Taxonomy Filter for Elementor works with WordPress posts, WooCommerce products, and custom post types. Choose buttons, checkboxes, radio buttons, a dropdown, or multi-select, then style the widget in Elementor.
 
 [![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-blue?logo=wordpress)](https://wordpress.org/)
 [![Elementor](https://img.shields.io/badge/Elementor-Pro-purple?logo=elementor)](https://elementor.com/)
@@ -12,18 +12,18 @@
 
 ## 👋 Why This Plugin Exists
 
-Hi, I'm Tanzim! I built this plugin because I was frustrated with the heavy, AJAX-bloated filtering plugins available for Elementor. They broke my layouts, fired duplicate database queries on every click, and slowed down my sites.
+Hi, I'm Tanzim. I built this plugin to offer a straightforward way to filter Elementor Pro Loop Grids without sending a new AJAX request whenever someone changes a filter.
 
-I wanted something that felt **completely native** to Elementor Pro — a widget you just drop in, connect to your Loop Grid with a simple CSS ID, and it **just works**. No configuration headaches, no performance penalties, no broken designs.
+Add the widget, connect it to your Loop Grid with a CSS ID, and choose the taxonomy and filter style. The plugin uses taxonomy classes on the grid items to show matching results in the browser.
 
-The result is a filter engine that runs entirely in the browser using an optimized CSS visibility system. Your visitors get instant results with smooth animations, and your server doesn't even know a filter was clicked.
+### What the plugin offers
 
-### What makes this different from other WordPress filter plugins:
-
-- **⚡ Zero AJAX Lag** — Posts filter and animate instantly on click. No loading spinners, no server roundtrips, better Core Web Vitals scores.
-- **🛡️ Unbreakable Stability** — Every critical path is wrapped in `try/catch` exception handling. Even if another plugin throws an error, this one keeps working.
-- **🎯 Simple CSS ID Targeting** — Connect your filter to any Loop Grid with one CSS ID. No complicated query builders or shortcodes.
-- **🔒 Secure & Lightweight** — Built with strict WordPress coding standards, proper sanitization/escaping, and vanilla JavaScript (zero jQuery dependency).
+- **No per-click AJAX requests** — Filter the Loop Grid items already loaded on the page, without a page reload.
+- **Simple Loop Grid connection** — Enter the grid's CSS ID in the widget settings.
+- **Flexible taxonomy support** — Use built-in categories and tags, WooCommerce taxonomies, or custom taxonomies such as those registered with ACF.
+- **Multiple filter styles** — Choose buttons, checkboxes, radio buttons, a dropdown, or multi-select.
+- **Elementor styling controls** — Adjust the widget's appearance from Elementor's Style tab.
+- **Vanilla JavaScript** — No jQuery dependency for filtering.
 
 ---
 
@@ -146,8 +146,8 @@ Yes! Select `product` as the post type and choose any WooCommerce taxonomy (`pro
 **Do I need Elementor Pro?**
 The filter widget loads with Elementor Free, but actually filtering a Loop Grid requires **Elementor Pro's Loop Builder**.
 
-**Will this slow down my website or hurt my SEO?**
-No. All filtering happens in the browser via CSS — no server calls, no extra database queries. All post content stays in the HTML source, so search engines can still crawl and index everything.
+**Will each filter change make another server request?**
+No. Filtering happens in the browser using the Loop Grid items already loaded on the page, so changing a filter does not make a new AJAX request. The initial page load still has to load the grid content.
 
 **Can visitors select multiple taxonomy terms?**
 Yes — use the **Checkbox** or **Multi-Select** filter types to let users combine multiple terms.

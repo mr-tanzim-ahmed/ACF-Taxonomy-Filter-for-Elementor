@@ -9,19 +9,19 @@ Stable tag: 1.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Filter Elementor Pro Loop Grid posts by taxonomy instantly — no AJAX, no page reloads. Buttons, checkboxes, radio, dropdown & multi-select filters for categories, tags, and ACF custom taxonomies.
+Filter Elementor Pro Loop Grid items by category, tag, or custom taxonomy without a page reload or a new AJAX request for each filter change. Choose buttons, checkboxes, radio buttons, a dropdown, or multi-select. Works with WordPress posts, WooCommerce products, and custom post types.
 
 == Description ==
 
-**ACF Taxonomy Filter for Elementor** is a lightweight, high-performance WordPress filter plugin that adds instant taxonomy filtering to your Elementor Pro Loop Grids — without expensive AJAX requests, page reloads, or database strain.
+**ACF Taxonomy Filter for Elementor** adds client-side taxonomy filtering to Elementor Pro Loop Grids. Visitors can filter the grid items loaded on the page without a reload or a new AJAX request for each filter change.
 
-Instead of querying the database on every click, this Elementor filter widget uses an optimized client-side CSS engine: all posts load once, and filtering happens instantly in the browser with smooth fade, slide, and zoom animations. The result is a faster website, better Core Web Vitals, and a smoother user experience.
+Connect the widget to a Loop Grid with a CSS ID, then choose a post type, taxonomy, and filter style. Filtering uses the taxonomy classes on the grid items and happens in the browser. The initial page still needs to load the Loop Grid content.
 
-Perfect for WordPress blogs, WooCommerce product grids, real estate listings, portfolios, directories, and any archive built with the Elementor Pro Loop Builder.
+Use it for WordPress blogs, WooCommerce product grids, portfolios, directories, and other layouts built with the Elementor Pro Loop Builder.
 
 = Key Features =
 
-* **Instant Client-Side Filtering** — Filter posts instantly without AJAX database lag or page refreshes.
+* **Client-Side Filtering** — Filter loaded Loop Grid items without a page reload or a new AJAX request for each filter change.
 * **Native Elementor Pro Loop Grid Support** — Link the filter to any Loop Grid with a simple CSS ID.
 * **5 Filter Types** — Buttons, Checkboxes, Radio Buttons, Dropdown, and Multi-Select.
 * **ACF & Custom Taxonomy Support** — Works with categories, tags, WooCommerce taxonomies, and custom taxonomies registered by Advanced Custom Fields (ACF) or any other plugin.
@@ -31,7 +31,7 @@ Perfect for WordPress blogs, WooCommerce product grids, real estate listings, po
 * **Term Counts, Reset Button & Result Counter** — Optional post counts per term, a reset filter button, and a live result count message.
 * **Hierarchical Terms** — Optional indentation for child categories and terms.
 * **Accessible Markup** — ARIA roles, labels, and keyboard-focus navigation built in.
-* **Performance Optimized** — Lightweight vanilla JavaScript with zero jQuery dependency and minimal CSS.
+* **Lightweight Front End** — Uses vanilla JavaScript for filtering, with no jQuery dependency.
 
 = How It Works =
 
@@ -55,8 +55,8 @@ Yes. Select the `product` post type and any WooCommerce taxonomy (e.g. `product_
 = Do I need Elementor Pro? =
 The filter widget itself loads with Elementor Free, but filtering Loop Grids requires the Loop Builder feature in Elementor Pro.
 
-= Does this plugin affect page loading speed or SEO? =
-No. Assets are minimal, and client-side filtering avoids extra AJAX database queries. All content stays in the HTML, so search engines can crawl every post.
+= Does each filter change send an AJAX request? =
+No. Filtering happens in the browser using the Loop Grid items already loaded on the page. The initial page load still has to load the grid content.
 
 = Does it work with custom post types and custom taxonomies? =
 Yes. Any public post type and any public taxonomy — including those registered by ACF, CPT UI, or custom code — can be selected in the widget's Query settings.
